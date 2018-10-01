@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from flask_mysqldb import MySQL
 from flask_cors import CORS
 from googleapiclient import discovery
 from textblob import TextBlob
@@ -39,12 +38,12 @@ def hello_world():
     # mysql.connection.commit()
     # # Close connection
     # cur.close()
-    userId = 0
-    result = userExists("handler")
-    user = result[0];
-    if user:
-        userId = result[1][0]
-    return "Hello World from backend " + "user Id " + str(userId)
+    # userId = 0
+    # result = userExists("handler")
+    # user = result[0];
+    # if user:
+    #     userId = result[1][0]
+    return "Hello World"
 
 @app.route('/registerUser', methods=['POST'])
 def registerUser():
