@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from flask_cors import CORS
+#from flask_cors import CORS
 from googleapiclient import discovery
 from textblob import TextBlob
 import json
@@ -29,7 +29,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 #mysql = MySQL(app)
 #conn = mysql.connect()
 #cursor = conn.cursor()
-CORS(app)
+#CORS(app)
 
 @app.route('/')
 def hello_world():
