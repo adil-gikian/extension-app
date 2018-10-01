@@ -193,7 +193,7 @@ def getUserID(handler):
     print("Get the user id given the handler")
 
 def perspective(text):
-    API_KEY = 'AIzaSyAiBsN6uIt8Nti_8emcbFS9TN5dAqne1zY'
+    ## API_KEY = 'key'
     # Generates API client object dynamically based on service name and version.
     service = discovery.build('commentanalyzer', 'v1alpha1', developerKey=API_KEY)
 
