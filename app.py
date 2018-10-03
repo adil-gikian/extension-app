@@ -43,7 +43,7 @@ def hello_world():
     # user = result[0];
     # if user:
     #     userId = result[1][0]
-    return "Hello World"
+    return render_template('index.html')
 
 @app.route('/registerUser', methods=['POST'])
 def registerUser():
