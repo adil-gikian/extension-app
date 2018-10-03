@@ -134,7 +134,7 @@ def handleIncomingTweet(text):
     charEntity = svcCharEntity.predict(vct)
     labelT = typeLabel[charType[0]]
     labelEnt = entityLabel[charEntity[0]]
-    resp = {'toxic': False, 'notify': True, "labelT":labelT, "labelEnt":labelEnt, 'toxicity': toxicity ,'sentiment':sentiment, 'nagative': False, 'message':'', 'title': "Title"}
+    resp = {'toxic': False, 'notify': False, "labelT":labelT, "labelEnt":labelEnt, 'toxicity': toxicity ,'sentiment':sentiment, 'nagative': False, 'message':'', 'title': "Title"}
     resp['toxic'] = toxicity >= 0.4
     resp['negative'] = sentiment <= -0.4
 
@@ -157,10 +157,12 @@ def handleIncomingTweet(text):
     else:
         resp['title'] = labelEnt
         resp['message'] = "Majority will find this tweet as offensive. You can alwyas try another way to convey your message."
-
-
-    if resp['message'] != '':
-        resp['notify'] = True
+     
+    if resp['negative']:
+        if resp['toxic']:
+            resp['notify'] = True
+        if resp['message'] == '':
+            resp['message'] = "Google Comments Api marked this tweet as toxic. It may not please your audience."
 
     print("After textBlob")
     #res = "Google Perspective Api's Toxicity Probability " + str(toxicity) + " and Sentiment Polarity score " + str(sentiment)
