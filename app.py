@@ -118,7 +118,7 @@ def emailDetect():
                 "sentence": sent,
                 "response": response
             }
-        resp.append(r)
+            resp.append(r)
     return json.dumps(resp)
 
 
