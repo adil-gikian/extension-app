@@ -1,1 +1,3 @@
 runtime: python37
+- url: /.*
+  script: app.app
