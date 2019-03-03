@@ -225,4 +225,3 @@ def perspective(text):
     toxicity = response["attributeScores"]["TOXICITY"]["summaryScore"]["value"]
 
     return toxicity
-
