@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 #from flask_mysqldb import MySQL
-#from flask_cors import CORS
+from flask_cors import CORS
 from googleapiclient import discovery
 from textblob import TextBlob
 import json, os
@@ -41,7 +41,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 #mysql = MySQL(app)
 #conn = mysql.connect()
 #cursor = conn.cursor()
-#CORS(app)
+CORS(app)
 
 @app.route('/')
 def hello_world():
@@ -111,6 +111,19 @@ def commentDetect():
     }
     return json.dumps(resp)
 
+@app.route('/getAllTweets', methods=['GET'])
+def getAllTweets():
+    data = request.form
+    text = data['text']
+    response = handleIncomingTweet(text)
+    resp = {
+        "toxicity": response["toxicity"],
+        "label": response["labelEnt"],
+        "sentiment": response["sentiment"]
+    }
+    return json.dumps(resp)
+
+
 
 @app.route('/saveUser', methods=['POST'])
 def saveUser():
@@ -157,10 +170,10 @@ def handleIncomingTweet(text):
     elif labelEnt == "Offensive":
         resp['title'] = labelEnt
         resp['message'] = "Google Comment Api marked this tweet as toxic. Your audience will find it negatively addressed. You can try another way to convey your message."
-    elif labelEnt=="Racism":
+    elif labelEnt =="Racism":
         resp['title'] = "Toxic tweet"
         resp['message'] = "Google Comments Api marked this tweet as toxic. It may not please your audience."
-    elif labelEnt=="Harassment":
+    elif labelEnt =="Harassment":
         resp['title'] = labelEnt
         resp[
             'message'] = "Most of the people will find this tweet as negative. You can try another way to convey your message."
@@ -172,9 +185,12 @@ def handleIncomingTweet(text):
     if resp['message'] != '':
         resp['notify'] = True
     else:
-        if toxicity >= 0.3:
+        if toxicity >= 0.4:
             resp['message'] = "Majority will find this tweet as offensive. You can alwyas try another way to convey your message."
             resp['notify'] = True
+    if resp['notify'] == True:
+        if sentiment >= -0.2:
+            resp['notify'] = False
 
     print("After textBlob", resp)
     #res = "Google Perspective Api's Toxicity Probability " + str(toxicity) + " and Sentiment Polarity score " + str(sentiment)
