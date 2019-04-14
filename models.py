@@ -10,6 +10,7 @@ db = SQLAlchemy(model_class=TimestampedModel)
 
 class Users(db.Model):
     __tablename__ = 'users'
+    __table_args__ = {'extend_existing': True}
     __table_args__ = (db.UniqueConstraint('handler'),)
 
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +34,7 @@ class Users(db.Model):
 
 class Edits(db.Model):
     __tablename__ = 'edits'
+    __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
     handler = db.Column(db.String())
@@ -63,7 +65,8 @@ class Edits(db.Model):
         }
 
 class UserTime(db.Model):
-    __tablename__ = 'edits'
+    __tablename__ = 'usertimes'
+    __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
     handler = db.Column(db.String())
