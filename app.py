@@ -9,7 +9,7 @@ from nltk.tokenize import sent_tokenize
 
 from flask_sqlalchemy import SQLAlchemy
 
-from models import Users, Edits, db
+from models import Users, Edits, UserTime, db
 
 # clf_wassem = joblib.load('svc-wassem.pkl')
 # tf_idf_wassem = joblib.load('tfidf-wassem.pkl')
@@ -48,7 +48,7 @@ def hello_world():
     # cur = mysql.connection.cursor()
     # cur.execute('INSERT INTO users(name, handler) VALUES(%s, %s)', ("myname", "handler"))
     # mysql.connection.commit()
-    # # Close connection
+    ## Close connection
     # cur.close()
     userId = 0
     result = userExists("handler")
@@ -132,13 +132,40 @@ def saveUser():
     print(handler);
     try:
         user = Users(
-            name = '',
-            handler = handler
+            handler = handler,
+            name=''
         )
         db.session.add(user)
         db.session.commit()
         print("User Id", user.id)
         return "User added. User id={}".format(user.id)
+    except Exception as e:
+        print(str(e))
+        return (str(e))
+    resp = {"status": "Success"}
+    return json.dumps(resp)
+
+@app.route('/saveTimes', methods=['POST'])
+def saveTimes():
+    data = request.form
+    handler = data['handler']
+    noOfDays = data['noOfDays']
+    lastActiveDay = data['lastActiveDay']
+    totalTime = data['totalTime']
+    timeSpent = data['timeSpent']
+    print(handler);
+    try:
+        times = UserTime(
+            handler = handler,
+            noOfDays = noOfDays,
+            lastActiveDay = lastActiveDay,
+            totalTime = totalTime,
+            timeSpent = timeSpent
+        )
+        db.session.add(times)
+        db.session.commit()
+        print("Times Added", times.id)
+        return "Times added. Times id={}".format(times.id)
     except Exception as e:
         print(str(e))
         return (str(e))

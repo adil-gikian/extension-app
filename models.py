@@ -61,3 +61,34 @@ class Edits(db.Model):
             'handler': self.handler,
             'created_at': self.created_at
         }
+
+class UserTime(db.Model):
+    __tablename__ = 'edits'
+
+    id = db.Column(db.Integer, primary_key=True)
+    handler = db.Column(db.String())
+    timeSpent = db.Column(db.String())
+    lastActiveDay = db.Column(db.String())
+    totalTime = db.Column(db.String())
+    noOfDays = db.Column(db.String())
+
+    def __init__(self, handler, timeSpent, lastActiveDay, totalTime, noOfDays):
+        self.handler = handler
+        self.timeSpent = timeSpent
+        self.lastActiveDay = lastActiveDay
+        self.totalTime = totalTime
+        self.noOfDays = noOfDays
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'handler': self.handler,
+            'timeSpent': self.timeSpent,
+            'lastActiveDay': self.lastActiveDay,
+            'totalTime': self.totalTime,
+            'noOfDays': self.noOfDays,
+            'created_at': self.created_at
+        }
