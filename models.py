@@ -66,7 +66,6 @@ class Edits(db.Model):
 
 class UserTime(db.Model):
     __tablename__ = 'usertimes'
-    __table_args__ = {'extend_existing': True}
 
     id = db.Column(db.Integer, primary_key=True)
     handler = db.Column(db.String())
