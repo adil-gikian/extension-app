@@ -2,6 +2,7 @@ from flask_sqlalchemy import Model, SQLAlchemy
 from sqlalchemy import Column, DateTime
 from datetime import datetime
 
+
 class TimestampedModel(Model):
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -29,8 +30,12 @@ class Users(db.Model):
             'id': self.id,
             'name': self.name,
             'handler': self.handler,
-            'created_at': self.created_at
+            'created_at': str(self.created_at)
         }
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 
 class Edits(db.Model):
     __tablename__ = 'edits'
@@ -61,8 +66,12 @@ class Edits(db.Model):
             'messageShown': self.messageShown,
             'noOfEdits': self.noOfEdits,
             'handler': self.handler,
-            'created_at': self.created_at
+            'created_at': str(self.created_at)
         }
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
 
 class UserTime(db.Model):
     __tablename__ = 'usertimes'
@@ -92,5 +101,9 @@ class UserTime(db.Model):
             'lastActiveDay': self.lastActiveDay,
             'totalTime': self.totalTime,
             'noOfDays': self.noOfDays,
-            'created_at': self.created_at
+            'created_at': (self.created_at)
         }
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]

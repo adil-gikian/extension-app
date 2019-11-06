@@ -6,10 +6,13 @@ from textblob import TextBlob
 import json, os
 from sklearn.externals import joblib
 from nltk.tokenize import sent_tokenize
-
+from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
+from random import randrange
+
 
 from models import Users, Edits, UserTime, db
+
 
 # clf_wassem = joblib.load('svc-wassem.pkl')
 # tf_idf_wassem = joblib.load('tfidf-wassem.pkl')
@@ -28,8 +31,8 @@ app = Flask(__name__)
 
 #app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/prosocial'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xghjfozhdmbkdo:78c4a3adb92ea8f1b8d135888040a87320903e6c83ea786007839cef97ffd164@ec2-54-247-82-210.eu-west-1.compute.amazonaws.com:5432/d8h6ie6g74jmgo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/prosocial'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xghjfozhdmbkdo:78c4a3adb92ea8f1b8d135888040a87320903e6c83ea786007839cef97ffd164@ec2-54-247-82-210.eu-west-1.compute.amazonaws.com:5432/d8h6ie6g74jmgo'
 db.init_app(app)
 
 
@@ -90,6 +93,22 @@ def tweetComplete():
     #userId = result[1][0]
     resp = saveEdits(handler, finalTweet, edits, noOfEdits, messageShown)
     return json.dumps(resp)
+
+@app.route('/returnUsers', methods=['GET'])
+def returnUsers():
+    users = Users.query.all()
+
+    return json.dumps(Users.serialize_list(users))
+
+@app.route('/returnEdits', methods=['GET'])
+def returnedits():
+    edits = Edits.query.all()
+    return json.dumps(Edits.serialize_list(edits))
+
+@app.route('/returnTimes', methods=['GET'])
+def returnTimes():
+    utimes = UserTime.query.all()
+    return json.dumps(UserTime.serialize_list(utimes))
 
 @app.route('/tweet-analysis-live', methods=["GET",'POST'])
 def postRequest():
@@ -187,23 +206,35 @@ def handleIncomingTweet(text):
     resp = {'toxic': False, 'notify': True, "labelT":labelT, "labelEnt":labelEnt, 'toxicity': toxicity ,'sentiment':sentiment, 'nagative': False, 'message':'', 'title': "Title"}
     resp['toxic'] = toxicity >= 0.3
     resp['negative'] = sentiment <= -0.4
-
+    ind = randrange(10)
+    messages = [
+        "People don't like it when addressed like this. This tweet could be conveyed in some other way.",
+        "Google Comment Api marked this tweet as offensive. Your audience will find it negatively addressed.",
+        "Google Comments Api marked this tweet as offensive. It may not please your audience.",
+        "Majority of the people will find this tweet as offensive. You can alwyas try another way to convey your message.",
+        "Your tweet has been identified to have offensive content in it. Twitter does not allow its users to post such content and you have agreed to this in Terms and Conditions."
+        "Google Comment API has marked your tweet as Offensive. It is advised that you change your tweet and convey your message in a better tone to your followers.",
+        "You are going to lose your followers by posting such tweets which contain offensive material.",
+        "Your tweet contains offensive content in it. It is advised that you convey your message in a civil way.",
+        "Your followers will not like this type of content which contains offensive content in it.",
+        "Twitter does not tolerate abusive content on its platform. It is advised that you change your tweet to follow community guidelines."
+    ]
     if labelEnt == "Sexism":
         resp['title'] = labelEnt
-        resp['message'] = "People don't like it often when addressed like this. This message could be conveyed in some other way."
+        resp['message'] = messages[ind]
     elif labelEnt == "Abusive":
         resp['title'] = labelEnt
-        resp['message'] = "No one likes to be hatred. Your audience may find it be hate speech and they can report you on this."
+        resp['message'] = messages[ind]
     elif labelEnt == "Offensive":
         resp['title'] = labelEnt
-        resp['message'] = "Google Comment Api marked this tweet as toxic. Your audience will find it negatively addressed. You can try another way to convey your message."
+        resp['message'] = messages[ind]
     elif labelEnt =="Racism":
         resp['title'] = "Toxic tweet"
-        resp['message'] = "Google Comments Api marked this tweet as toxic. It may not please your audience."
+        resp['message'] = messages[ind]
     elif labelEnt =="Harassment":
         resp['title'] = labelEnt
         resp[
-            'message'] = "Most of the people will find this tweet as negative. You can try another way to convey your message."
+            'message'] = messages[ind]
     else:
         resp['title'] = labelEnt
         resp['message'] = "Majority will find this tweet as offensive. You can alwyas try another way to convey your message."
