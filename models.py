@@ -101,7 +101,7 @@ class UserTime(db.Model):
             'lastActiveDay': self.lastActiveDay,
             'totalTime': self.totalTime,
             'noOfDays': self.noOfDays,
-            'created_at': (self.created_at)
+            'created_at': str(self.created_at)
         }
 
     @staticmethod
