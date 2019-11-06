@@ -31,8 +31,8 @@ app = Flask(__name__)
 
 #app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/prosocial'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xghjfozhdmbkdo:78c4a3adb92ea8f1b8d135888040a87320903e6c83ea786007839cef97ffd164@ec2-54-247-82-210.eu-west-1.compute.amazonaws.com:5432/d8h6ie6g74jmgo'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/prosocial'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://xghjfozhdmbkdo:78c4a3adb92ea8f1b8d135888040a87320903e6c83ea786007839cef97ffd164@ec2-54-247-82-210.eu-west-1.compute.amazonaws.com:5432/d8h6ie6g74jmgo'
 db.init_app(app)
 
 
